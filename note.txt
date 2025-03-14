@@ -1,0 +1,42 @@
+Build a pipeline that extract, validate, transform, and load data into Redshift
+
+First of all, make sure the data are in their respective sources, 
+user and song metadata are in RDS
+streams data in S3
+
+The data sources have their respective data ✅
+
+Now I need to perform transformations and move it to redshift.
+
+I have two data sources - S3 and RDS
+
+Transformations:
+I am doing transformation in colab.
+I need to understand the various columns especially the ones in songs so I can use for analysis
+
+
+TODO/MIGHTDO:
+Do some feature engineering for the user table, you can add something like their most played or their fav based 
+on some different sources if there is time.
+if there is time, add loggings to get handled errors and save them in a files
+So if a new row is added, it should only fetch that row. 
+Do ERD for the Data ✅
+Add Validation step ✅
+Use AWS Secret Manager to store keys
+Go through your code again and replace the print with raised exceptions
+Maybe add a check to validate that it is csv file
+If time permit do an extension eda instead of just dropping null and duplicate rows (Maybe specify a criteria to drop or not)
+Add a cleanup task either at the end of the dag or when it's free or something
+Implement parallel processing or multithreading to speed it up.
+Maybe add parallelism to the pipeline
+Have two dags one for hourly and one for daily, the hourly will be in charge of processing the data and 
+saving it into archived/processed_files or something and the daily will only fetch and compute from there.
+Go through the code and perform optimization like removing unnecessary columns earlier in some processes
+
+Bottlenecks ❗
+Maximum data you can use to pass through redis is 1mb for free version because of that, I can't use it to store the users and
+songs data for use in the pipeline
+
+Quick Notice ⚠️:
+You can exchange the data between them with XCOM since the files are light. MWAA uses PG which gives 1gb XCOM capacity.
+Remove redis keys before pushing 
