@@ -29,9 +29,10 @@ If time permit do an extension eda instead of just dropping null and duplicate r
 Add a cleanup task either at the end of the dag or when it's free or something
 Implement parallel processing or multithreading to speed it up.
 Maybe add parallelism to the pipeline
-Have two dags one for hourly and one for daily, the hourly will be in charge of processing the data and 
 saving it into archived/processed_files or something and the daily will only fetch and compute from there.
 Go through the code and perform optimization like removing unnecessary columns earlier in some processes
+Perform a clean up after everything like moving files, deleteing files and the like
+After organizing your task into sub task and everything, consider pulling keys from task and deleting instead of using redis
 
 Bottlenecks ❗
 Maximum data you can use to pass through redis is 1mb for free version because of that, I can't use it to store the users and
@@ -40,3 +41,7 @@ songs data for use in the pipeline
 Quick Notice ⚠️:
 You can exchange the data between them with XCOM since the files are light. MWAA uses PG which gives 1gb XCOM capacity.
 Remove redis keys before pushing 
+
+Observed Limitation
+Since I am using redis to store the stream files after fetching from s3 to pass them around the task, The upstash redis account supposed to have a pro since free has a max of 1mb data that can be sent at once.
+to have a pro account
