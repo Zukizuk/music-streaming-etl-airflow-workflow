@@ -95,7 +95,6 @@ def drop_redshift_tables(tables: list=[]):
         redshift_hook.run(f"DROP TABLE IF EXISTS {table};")
     print("✅ Redshift tables dropped successfully.")
 
-# TODO: Uncomment the function below to archive processed files
 def archive_processed_files():
     """Archive processed files in S3 by moving to a different folder."""
     try:
@@ -110,7 +109,7 @@ def archive_processed_files():
             for key in keys:
                 new_key = key.replace(source, s3_archive_path)
                 s3_client.copy_object(Bucket=bucket_name, CopySource=f"{bucket_name}/{key}", Key=new_key)
-                # s3_client.delete_object(Bucket=bucket_name, Key=key) 
+                s3_client.delete_object(Bucket=bucket_name, Key=key) 
             print(f"✅ Processed files archived to S3: {bucket_name}/{s3_archive_path}")
             return True
     except Exception as e:
@@ -152,7 +151,7 @@ def fetch_keys_from_s3(s3_client, bucket_name, keys=None, prefix=None, all_files
         print("No keys provided, no prefix specified and 'all' is False. Nothing to fetch.")
         return []
 
-# ! Keep
+
 def process_s3_file(s3_client, bucket_name, key):
     """Process a single S3 file and return its dataframe."""
     try:
@@ -170,7 +169,7 @@ def process_s3_file(s3_client, bucket_name, key):
         print(f"Error processing file {key}: {e}")
         return None
 
-# ! Keep
+
 def store_dataframes_in_redis(ti):
     """Store dataframes in Redis."""
     r = get_redis_client()
@@ -187,7 +186,7 @@ def store_dataframes_in_redis(ti):
         print(f"{key} saved to Redis")
     return stored_files
 
-# ! Keep
+
 def extraction_streams_from_s3(prefix: str = source, **kwargs):
     """Fetch files from S3 bucket."""
     s3_client = get_aws_client("s3")
@@ -224,7 +223,7 @@ def extraction_streams_from_s3(prefix: str = source, **kwargs):
         print(f"Failed to fetch files from S3: {e}")
         return {}
 
-# ! Keep
+
 def extract_users_data(ti):
     """Read user data from PostgreSQL"""
     connection = get_pg_connection()
@@ -252,7 +251,7 @@ def extract_users_data(ti):
     except Exception as e:
         print(f"Error reading user data: {e}")
 
-# ! Keep
+
 def extract_songs_data(ti):
     """Read songs data from PostgreSQL"""
     connection = get_pg_connection()
@@ -279,7 +278,7 @@ def extract_songs_data(ti):
     except Exception as e:
         print(f"Error reading songs data: {e}")
 
-# ! Keep
+
 # * Validation functions
 def validate_data(ti):
     """Validating data before EDA"""
@@ -320,7 +319,7 @@ def validate_data(ti):
         print(f"Validation failed: {e}")
         return False
 
-# ! Keep
+
 def basic_transformations(df: pd.DataFrame, key: str):
     if "stream" in key:
         df["listen_time"] = pd.to_datetime(df["listen_time"])
@@ -335,7 +334,7 @@ def basic_transformations(df: pd.DataFrame, key: str):
         df = df.drop_duplicates()
         return df
 
-# ! Keep
+
 # * EDA functions
 def perform_transformations(ti):
     keys = ti.xcom_pull(task_ids="validate_data_task")
@@ -368,7 +367,7 @@ def perform_transformations(ti):
         print(f"Transformations failed: {e}")
         return False
 
-# ! Keep
+
 def merge_data_for_computation(dataframes):
     """Merge dataframes for further computation."""
     try:
@@ -398,7 +397,7 @@ def merge_data_for_computation(dataframes):
         print(f"Error merging data: {e}")
         return False
 
-# ! Keep
+
 def compute_genre_kpis(ti):
     s3_client = get_aws_client("s3")
     s3_path = f"processed/year={now.year}/month={now.month:02d}/day={now.day:02d}/streams.parquet"
@@ -434,7 +433,7 @@ def compute_genre_kpis(ti):
     print("✅ Genre KPIs computed and saved to XCom.")
     return True
 
-# ! Keep
+
 def compute_hourly_kpis(ti):
     s3_client = get_aws_client("s3")
     s3_path = f"processed/year={now.year}/month={now.month:02d}/day={now.day:02d}/streams.parquet"
@@ -471,7 +470,7 @@ def compute_hourly_kpis(ti):
     print("✅ Hourly KPIs computed and saved to XCom.")
     return True
 
-# ! Keep
+
 # * Clean Task Functions
 def perform_archive_clean_up():
     """Perform clean up of processed files in S3."""
@@ -513,7 +512,7 @@ def cleanup_on_failure():
         print("✅ Nothing to clean up.")
         return "✅ Nothing to clean up."
 
-# ! Keep
+
 def create_redshift_tables():
     """Create Redshift tables if they don't exist."""
     try:
@@ -562,7 +561,7 @@ def create_redshift_tables():
         connection.close()
         return False
 
-# ! Keep
+
 def insert_data_into_redshift(ti):
     """Insert data into Redshift."""
     try:

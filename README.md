@@ -79,6 +79,13 @@ read more on it.
 
 ![Dag Run](/assets/Dag%20Taskflow.png)
 
+## Future Implementation
+
+- **Improve Logging**: Add more informative logging to track DAG performance and potential issues.
+- **Error Handling**: Implement a robust error handling system to catch and handle exceptions.
+- **Monitoring**: Integrate with monitoring tools such as Prometheus and Grafana to monitor DAG performance.
+- **Security**: Implement encryption for sensitive data and use AWS Secret Manager for secure key management.
+
 ## Contribution
 
 1. Fork the repository.
