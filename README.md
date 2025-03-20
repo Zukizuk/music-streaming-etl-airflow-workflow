@@ -109,4 +109,4 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For any inquiries, please contact **Marzuk Entsie** at marzuk.entsie@amalitech.com.
+For any inquiries, please contact **Me** at sannimarzuk@gmail.com.
